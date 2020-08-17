@@ -1,4 +1,4 @@
-package Entities;
+package SingleExercisesEntities;
 
 public class Student {
 

@@ -1,6 +1,6 @@
 package Application;
 
-import Entities.*;
+import SingleExercisesEntities.*;
 import Utils.CurrencyConverter;
 
 import java.util.ArrayList;
@@ -132,33 +132,33 @@ public class Main {
                     System.out.print("Product Price:");
                     price = sc.nextDouble();
 
-                    Product product = new Product(name, price);
+                    Products products = new Products(name, price);
 
                     System.out.println();
-                    System.out.print("Product data: " + product);
+                    System.out.print("Product data: " + products);
 
                     System.out.println();
                     System.out.print("Enter the number of products to be added in stock: ");
                     quantity = sc.nextInt();
-                    product.addProducts(quantity);
+                    products.addProducts(quantity);
 
                     System.out.println();
-                    System.out.print("Product updated data: " + product);
+                    System.out.print("Product updated data: " + products);
 
                     System.out.println();
                     System.out.print("Enter the number of products to be removed in stock: ");
                     quantity = sc.nextInt();
-                    product.removeProducts(quantity);
+                    products.removeProducts(quantity);
 
                     System.out.println();
-                    System.out.print("Product updated data: " + product);
+                    System.out.print("Product updated data: " + products);
 
                     System.out.println();//using get and set for product name attribute
                     System.out.print("Change product name: ");
                     String editName = sc.nextLine();
-                    product.setName(editName);
-                    System.out.println("Product Name changed to :" + product.getName());
-                    System.out.print("Product updated data: " + product);
+                    products.setName(editName);
+                    System.out.println("Product Name changed to :" + products.getName());
+                    System.out.print("Product updated data: " + products);
 
                 case 6:
 
@@ -243,7 +243,7 @@ public class Main {
                     int id, numberEmployees, argId;
                     String nameEmployee;
                     double salary, percentValue;
-                    ListedEmployee listedEmployee;
+                    //ListedEmployee listedEmployee;
                     List<ListedEmployee> listedEmployeeList = new ArrayList<>();
 
                     System.out.println("How many employees will be registered?");
@@ -295,7 +295,7 @@ public class Main {
                     }
 
                 case 9:
-                    int rows, columns, columnsCounter, rowsCounter, numberValues, numberChosen;
+                    int rows, columns, columnsCounter, rowsCounter,numberChosen;
 
                     System.out.println("Insert rows number:");
                     rows = sc.nextInt();
@@ -308,7 +308,8 @@ public class Main {
                     for (rowsCounter = 0; rowsCounter < matrix.length; rowsCounter++) {
                         for (columnsCounter = 0; columnsCounter < matrix[rowsCounter].length; columnsCounter++) {
                             System.out.println("Insert integer number:");
-                            numberValues = sc.nextInt();
+                            int numberValues = sc.nextInt();
+                            matrix [rowsCounter] [columnsCounter]= numberValues;
                         }
                     }
 
@@ -321,16 +322,16 @@ public class Main {
                             if (matrix[rowsCounter][columnsCounter] == numberChosen) {
                                 System.out.println("Position " + rowsCounter + "," + columnsCounter + ":\n");
                                 if (rowsCounter > 0) {
-                                    System.out.println("Up: " + matrix[rowsCounter - 1][columnsCounter] + "\n");
-                                }
-                                if (rowsCounter < matrix.length) {
-                                    System.out.println("Down: " + matrix[rowsCounter + 1][columnsCounter] + "\n");
-                                }
-                                if (columnsCounter < matrix[rowsCounter].length) {
-                                    System.out.println("Right: " + matrix[rowsCounter][columnsCounter + 1] + "\n");
-                                }
-                                if (columnsCounter > 0) {
-                                    System.out.println("Left: " + matrix[rowsCounter][columnsCounter - 1] + "\n");
+                                    System.out.println("Down: " + matrix[rowsCounter - 1][columnsCounter] + "\n");
+                                    if (columnsCounter < matrix[rowsCounter].length) {
+                                        System.out.println("Right: " + matrix[rowsCounter][columnsCounter + 1] + "\n");
+                                        if (columnsCounter > 0) {
+                                            System.out.println("Left: " + matrix[rowsCounter][columnsCounter - 1] + "\n");
+                                            if (rowsCounter < matrix[rowsCounter].length) {
+                                                System.out.println("Up: " + matrix[rowsCounter + 1][columnsCounter] + "\n");
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
