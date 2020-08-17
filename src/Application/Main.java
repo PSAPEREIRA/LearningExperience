@@ -232,9 +232,9 @@ public class Main {
 
                     System.out.println("\nRented Rooms:");
 
-                    for (int i = 0; i < roomRents.length; i++) {
-                        if (roomRents[i] != null) {
-                            System.out.println(roomRents[i]);
+                    for (RoomRent roomRent : roomRents) {
+                        if (roomRent != null) {
+                            System.out.println(roomRent);
                         }
                     }
                     break;
