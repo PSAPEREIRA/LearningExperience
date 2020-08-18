@@ -1,5 +1,6 @@
 package ComposedClassesEntities;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -10,7 +11,7 @@ public class Order {
     private Date moment;
     private OrderStatus status;
     private Client client;
-    private List<OrderItem> listedOrderItems = new ArrayList<>();
+    private final List<OrderItem> listedOrderItems = new ArrayList<OrderItem>();
 
     public Order() {
     }
@@ -20,6 +21,8 @@ public class Order {
         this.status = status;
         this.client = client;
     }
+
+    SimpleDateFormat simpleDateFormat= new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
     public Date getMoment() {
         return moment;
@@ -67,12 +70,21 @@ public class Order {
 
     @Override
     public String toString() {
-        return "Order{" +
-                "moment=" + moment +
-                ", status=" + status +
-                ", client=" + client +
-                ", orderItems=" + listedOrderItems +
-                '}';
+        StringBuilder sb= new StringBuilder();
+        sb.append("Order moment: ");
+        sb.append(simpleDateFormat.format(moment)).append("\n");
+        sb.append("Order status: ");
+        sb.append(status).append("\n");
+        sb.append("Client: ");
+        sb.append(client).append("\n");
+        sb.append("Order items:\n");
+
+        for (OrderItem item : listedOrderItems) {
+            sb.append(item).append("\n");
+        }
+        sb.append("Total price:");
+        sb.append(String.format("%.2f"+"€", total()));
+        return sb.toString();
     }
 
     @Override

@@ -1,5 +1,6 @@
 package ComposedClassesEntities;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
@@ -8,6 +9,8 @@ public class Client {
     private String name;
     private String email;
     private Date birthdate;
+
+    SimpleDateFormat simpleDateFormat= new SimpleDateFormat("dd/MM/yyyy");
 
     public Client() {
     }
@@ -40,6 +43,11 @@ public class Client {
 
     public void setBirthdate(Date birthdate) {
         this.birthdate = birthdate;
+    }
+
+    @Override
+    public String toString() {
+        return name + " (" + simpleDateFormat.format(birthdate) + ") - " + email;
     }
 
     @Override

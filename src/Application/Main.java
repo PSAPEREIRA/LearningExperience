@@ -1,30 +1,32 @@
 package Application;
 
+import ComposedClassesEntities.*;
 import SingleExercisesEntities.*;
 import Utils.CurrencyConverter;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Scanner;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ParseException {
 
         //Definir o local para PT
         Locale ptPortugal = new Locale("pt", "PT");
         Locale.setDefault(ptPortugal);
 
         Scanner sc = new Scanner(System.in);
+        SimpleDateFormat simpleDateFormat= new SimpleDateFormat("dd/MM/yyyy");
         int opt;
 
         do {
 
             System.out.println("\nPick an option:\n1-Rectangle Calculus\n2-Employee Salary\n3-Student Grades");
             System.out.println("4-Currency Converter\n5-Product\n6-BankAccount\n7-RoomRentVector\n8-ListEmployee");
-            System.out.println("9-ArrayOfArray\n0-QUIT\n");
+            System.out.println("9-ArrayOfArray\n10-ClientOrder\n0-QUIT\n");
             opt = sc.nextInt();
 
             switch (opt) {
@@ -337,11 +339,57 @@ public class Main {
                         }
                     }
                     break;
+                case 10:
+                    System.out.println("Client data:");
+                    sc.nextLine();
+                    System.out.print("Insert client name:");
+                    String clientName = sc.nextLine();
+                    System.out.print("Insert client email:");
+                    String clientEmail = sc.next();
+                    System.out.print("Insert client birthday (dd/mm/yyyy):");
+                    Date birthday = simpleDateFormat.parse(sc.next());
+
+                    Client client = new Client(clientName,clientEmail,birthday);
+
+                    System.out.println("\nOrder data");
+
+                    System.out.print("Insert order status (Pending_Payment;Processing;Shipped;Delivered):");
+                    OrderStatus orderStatus = OrderStatus.valueOf(sc.next());
+
+                    Order order = new Order(new Date(),orderStatus,client);
+
+                    System.out.print("How many items to this order:");
+                    int nrOfItems = sc.nextInt();
+                    for (int i=1;i<=nrOfItems;i++){
+                        System.out.println("Enter #"+ i +" item data:");
+
+                        System.out.print("Insert product name:");
+                        sc.nextLine();
+                        String productName=sc.nextLine();
+
+                        System.out.print("Insert product price:");
+                        double productPrice=sc.nextDouble();
+
+                        System.out.print("Insert product quantity for purchase:");
+                        int productQuantity=sc.nextInt();
+
+                        Product product = new Product(productName,productPrice);
+
+                        OrderItem item = new OrderItem(productQuantity,productPrice,product);
+
+                        order.addItem(item);
+
+                    }
+
+                    System.out.println();
+                    System.out.println(order);
+
+                    break;
+
                 default:
-                    System.out.println("Please choose an existing option");
+                    System.out.println("Program exiting");
                     break;
             }
-
         } while (opt != 0);
         sc.close();
     }
