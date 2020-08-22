@@ -1,10 +1,12 @@
 package Application;
 
 import ComposedClassesEntities.*;
+import InheritanceCastedClassesEntities.ImportedProducts;
+import InheritanceCastedClassesEntities.Products;
+import InheritanceCastedClassesEntities.UsedProducts;
 import SingleExercisesEntities.*;
 import Utils.CurrencyConverter;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -14,7 +16,7 @@ public class Main {
 
     public static void main(String[] args) throws ParseException {
 
-        //Definir o local para PT
+        //Local para PT
         Locale ptPortugal = new Locale("pt", "PT");
         Locale.setDefault(ptPortugal);
 
@@ -26,7 +28,7 @@ public class Main {
 
             System.out.println("\nPick an option:\n1-Rectangle Calculus\n2-Employee Salary\n3-Student Grades");
             System.out.println("4-Currency Converter\n5-Product\n6-BankAccount\n7-RoomRentVector\n8-ListEmployee");
-            System.out.println("9-ArrayOfArray\n10-ClientOrder\n0-QUIT\n");
+            System.out.println("9-ArrayOfArray\n10-ClientOrder\n11-ProductsNew&Used\n0-QUIT\n");
             opt = sc.nextInt();
 
             switch (opt) {
@@ -122,45 +124,45 @@ public class Main {
 
                 case 5:
 
-                    String name;
-                    double price;
+                    String productName;
+                    double productPrice;
                     int quantity;
 
                     System.out.println("Enter product data: ");
 
                     System.out.print("Product Name:");
-                    name = sc.nextLine();
+                    productName = sc.nextLine();
 
                     System.out.print("Product Price:");
-                    price = sc.nextDouble();
+                    productPrice = sc.nextDouble();
 
-                    Products products = new Products(name, price);
+                    ProductsSingle productsSingle = new ProductsSingle(productName, productPrice);
 
                     System.out.println();
-                    System.out.print("Product data: " + products);
+                    System.out.print("Product data: " + productsSingle);
 
                     System.out.println();
                     System.out.print("Enter the number of products to be added in stock: ");
                     quantity = sc.nextInt();
-                    products.addProducts(quantity);
+                    productsSingle.addProducts(quantity);
 
                     System.out.println();
-                    System.out.print("Product updated data: " + products);
+                    System.out.print("Product updated data: " + productsSingle);
 
                     System.out.println();
                     System.out.print("Enter the number of products to be removed in stock: ");
                     quantity = sc.nextInt();
-                    products.removeProducts(quantity);
+                    productsSingle.removeProducts(quantity);
 
                     System.out.println();
-                    System.out.print("Product updated data: " + products);
+                    System.out.print("Product updated data: " + productsSingle);
 
                     System.out.println();//using get and set for product name attribute
                     System.out.print("Change product name: ");
                     String editName = sc.nextLine();
-                    products.setName(editName);
-                    System.out.println("Product Name changed to :" + products.getName());
-                    System.out.print("Product updated data: " + products);
+                    productsSingle.setName(editName);
+                    System.out.println("Product Name changed to :" + productsSingle.getName());
+                    System.out.print("Product updated data: " + productsSingle);
 
                 case 6:
 
@@ -365,17 +367,17 @@ public class Main {
 
                         System.out.print("Insert product name:");
                         sc.nextLine();
-                        String productName=sc.nextLine();
+                        String productNames=sc.nextLine();
 
                         System.out.print("Insert product price:");
-                        double productPrice=sc.nextDouble();
+                        double productPrices=sc.nextDouble();
 
                         System.out.print("Insert product quantity for purchase:");
                         int productQuantity=sc.nextInt();
 
-                        Product product = new Product(productName,productPrice);
+                        Product product = new Product(productNames,productPrices);
 
-                        OrderItem item = new OrderItem(productQuantity,productPrice,product);
+                        OrderItem item = new OrderItem(productQuantity,productPrices,product);
 
                         order.addItem(item);
 
@@ -386,6 +388,46 @@ public class Main {
 
                     break;
 
+                case 11:
+
+                    List<InheritanceCastedClassesEntities.Products> listedProducts = new ArrayList<>();
+
+                    System.out.print("Enter the number of products: ");
+                    int nrOfProducts= sc.nextInt();
+
+                    for (int i=1; i<=nrOfProducts; i++) {
+                        System.out.println("Product #" + i + " data:");
+                        System.out.print("Common, used or imported (c/u/i)? ");
+                        char type = sc.next().charAt(0);
+                        System.out.print("Name: ");
+                        sc.nextLine();
+                        String productsName = sc.nextLine();
+                        System.out.print("Price: ");
+                        double productsPrice = sc.nextDouble();
+
+                        if (Character.toLowerCase(type) == 'c') {
+                            Products productsCommon = new Products(productsName, productsPrice);
+                            listedProducts.add(productsCommon);
+                        } else if (Character.toLowerCase(type) == 'u') {
+                            System.out.print("Manufacture date (DD/MM/YYYY): ");
+                            Date date = simpleDateFormat.parse(sc.next());
+                            UsedProducts productsUsed = new UsedProducts(productsName, productsPrice, date);
+                            listedProducts.add(productsUsed);
+                        } else {
+                            System.out.print("Customs fee: ");
+                            double customsFee = sc.nextDouble();
+                            ImportedProducts productsImported = new ImportedProducts(productsName, productsPrice, customsFee);
+                            listedProducts.add(productsImported);
+                        }
+                    }
+
+                        System.out.println();
+                        System.out.println("PRICE TAGS:");
+                        for (Products products : listedProducts) {
+                            System.out.println(products.tag());
+                        }
+
+                        break;
                 default:
                     System.out.println("Program exiting");
                     break;
