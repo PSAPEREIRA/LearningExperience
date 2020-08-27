@@ -1,0 +1,53 @@
+@startuml
+
+!define ABSTRACT &#123;abstract&#125;
+
+skinparam class {
+	BackgroundColor White
+	ArrowColor Black
+	BorderColor Black
+	FontSize 16
+
+}
+
+skinparam stereotypeCBackgroundColor White
+
+skinparam classAttributeIconSize 0
+
+skinparam classAttributeFontSize 13
+
+skinparam shadowing false
+
+skinparam defaultFontName Segoe UI
+
+skinparam Class {
+    HeaderBackgroundColor #DAE8FC
+	ArrowColor Black
+	BorderColor 6C8EBF
+	FontSize 15
+	FontColor Black
+	style Frame
+	FontStyle bold
+	FontName Arial Rounded MT Bold
+}
+
+hide circle
+
+abstract class TaxPayer
+class Individual
+class Company
+
+
+TaxPayer "1         " <.. "1  " Individual
+TaxPayer "1  " <.. "1  " Company
+
+
+TaxPayer : {abstract}
+TaxPayer : - Name : String
+TaxPayer : - anualIncome : Double
+TaxPayer : + tax() : Double
+
+Individual : - healthExpenditures:Double
+Company : - numberOfEmployees:interface
+
+@enduml

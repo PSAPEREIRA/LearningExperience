@@ -1,6 +1,11 @@
 package Application;
 
 import ComposedClassesEntities.*;
+import ExceptionExerciseEntitities.Account;
+import ExceptionExerciseEntitities.DomainException;
+import ExerciseAbstractEntities.Company;
+import ExerciseAbstractEntities.Individual;
+import ExerciseAbstractEntities.TaxPayer;
 import InheritanceCastedClassesEntities.ImportedProducts;
 import InheritanceCastedClassesEntities.Products;
 import InheritanceCastedClassesEntities.UsedProducts;
@@ -21,14 +26,15 @@ public class Main {
         Locale.setDefault(ptPortugal);
 
         Scanner sc = new Scanner(System.in);
-        SimpleDateFormat simpleDateFormat= new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
         int opt;
 
         do {
 
             System.out.println("\nPick an option:\n1-Rectangle Calculus\n2-Employee Salary\n3-Student Grades");
             System.out.println("4-Currency Converter\n5-Product\n6-BankAccount\n7-RoomRentVector\n8-ListEmployee");
-            System.out.println("9-ArrayOfArray\n10-ClientOrder\n11-ProductsNew&Used\n0-QUIT\n");
+            System.out.println("9-ArrayOfArray\n10-ClientOrder\n11-ProductsNew&Used\n12-TaxPayment\n13-AccountException");
+            System.out.println("0-QUIT\n");
             opt = sc.nextInt();
 
             switch (opt) {
@@ -299,7 +305,7 @@ public class Main {
                     }
 
                 case 9:
-                    int rows, columns, columnsCounter, rowsCounter,numberChosen;
+                    int rows, columns, columnsCounter, rowsCounter, numberChosen;
 
                     System.out.println("Insert rows number:");
                     rows = sc.nextInt();
@@ -313,7 +319,7 @@ public class Main {
                         for (columnsCounter = 0; columnsCounter < matrix[rowsCounter].length; columnsCounter++) {
                             System.out.println("Insert integer number:");
                             int numberValues = sc.nextInt();
-                            matrix [rowsCounter] [columnsCounter]= numberValues;
+                            matrix[rowsCounter][columnsCounter] = numberValues;
                         }
                     }
 
@@ -351,33 +357,33 @@ public class Main {
                     System.out.print("Insert client birthday (dd/mm/yyyy):");
                     Date birthday = simpleDateFormat.parse(sc.next());
 
-                    Client client = new Client(clientName,clientEmail,birthday);
+                    Client client = new Client(clientName, clientEmail, birthday);
 
                     System.out.println("\nOrder data");
 
                     System.out.print("Insert order status (Pending_Payment;Processing;Shipped;Delivered):");
                     OrderStatus orderStatus = OrderStatus.valueOf(sc.next());
 
-                    Order order = new Order(new Date(),orderStatus,client);
+                    Order order = new Order(new Date(), orderStatus, client);
 
                     System.out.print("How many items to this order:");
                     int nrOfItems = sc.nextInt();
-                    for (int i=1;i<=nrOfItems;i++){
-                        System.out.println("Enter #"+ i +" item data:");
+                    for (int i = 1; i <= nrOfItems; i++) {
+                        System.out.println("Enter #" + i + " item data:");
 
                         System.out.print("Insert product name:");
                         sc.nextLine();
-                        String productNames=sc.nextLine();
+                        String productNames = sc.nextLine();
 
                         System.out.print("Insert product price:");
-                        double productPrices=sc.nextDouble();
+                        double productPrices = sc.nextDouble();
 
                         System.out.print("Insert product quantity for purchase:");
-                        int productQuantity=sc.nextInt();
+                        int productQuantity = sc.nextInt();
 
-                        Product product = new Product(productNames,productPrices);
+                        Product product = new Product(productNames, productPrices);
 
-                        OrderItem item = new OrderItem(productQuantity,productPrices,product);
+                        OrderItem item = new OrderItem(productQuantity, productPrices, product);
 
                         order.addItem(item);
 
@@ -393,9 +399,9 @@ public class Main {
                     List<InheritanceCastedClassesEntities.Products> listedProducts = new ArrayList<>();
 
                     System.out.print("Enter the number of products: ");
-                    int nrOfProducts= sc.nextInt();
+                    int nrOfProducts = sc.nextInt();
 
-                    for (int i=1; i<=nrOfProducts; i++) {
+                    for (int i = 1; i <= nrOfProducts; i++) {
                         System.out.println("Product #" + i + " data:");
                         System.out.print("Common, used or imported (c/u/i)? ");
                         char type = sc.next().charAt(0);
@@ -421,17 +427,96 @@ public class Main {
                         }
                     }
 
-                        System.out.println();
-                        System.out.println("PRICE TAGS:");
-                        for (Products products : listedProducts) {
-                            System.out.println(products.tag());
-                        }
+                    System.out.println();
+                    System.out.println("PRICE TAGS:");
+                    for (Products products : listedProducts) {
+                        System.out.println(products.tag());
+                    }
 
-                        break;
+                    break;
+
+                case 12:
+
+                    List<TaxPayer> taxPayerList = new ArrayList<>();
+                    double sumOfAllTax = 0;
+                    System.out.println("Enter the number of tax Payers:");
+                    int nrOfTaxPayers = sc.nextInt();
+
+                    for (int i = 1; i <= nrOfTaxPayers; i++) {
+                        System.out.println("Enter tax payer #" + i + " data:");
+                        System.out.print("Individual or company(i/c)");
+                        char taxPayerType = sc.next().charAt(0);
+
+                        System.out.print("Enter name:");
+                        sc.nextLine();
+                        String taxPayerName = sc.nextLine();
+
+                        System.out.print("Enter Annual Income:");
+                        double annualIncome = sc.nextDouble();
+
+                        if (Character.toLowerCase(taxPayerType) == 'i') {
+                            System.out.print("Enter healthExpenditure:");
+                            double healthExpenditure = sc.nextDouble();
+
+                            //TaxPayer taxPayer = new Individual(taxPayerName, annualIncome, healthExpenditure);
+                            taxPayerList.add(new Individual(taxPayerName, annualIncome, healthExpenditure));
+
+                        } else {
+                            System.out.print("Enter number of employees:");
+                            int nrOfEmployees = sc.nextInt();
+
+                            TaxPayer taxPayer = new Company(taxPayerName, annualIncome, nrOfEmployees);
+                            taxPayerList.add(taxPayer);
+
+                        }
+                    }
+                    System.out.println("Taxes Paid:");
+                    for (TaxPayer taxPayer : taxPayerList) {
+                        double tax = taxPayer.taxTotal();
+                        System.out.println(taxPayer.getName() + ":" + taxPayer.taxTotal());
+                        sumOfAllTax += tax;
+                    }
+
+                    System.out.println();
+                    System.out.println("TOTAL TAXES:" + String.format("%.2f", sumOfAllTax) + "€");
+
+                    break;
+
+                case 13:
+
+                    boolean validInput=false;
+
+                    System.out.println("Enter account data");
+                    System.out.print("Number: ");
+                    int number = sc.nextInt();
+                    System.out.print("Holder: ");
+                    sc.nextLine();
+                    String holder = sc.nextLine();
+                    System.out.print("Initial balance: ");
+                    double balance = sc.nextDouble();
+                    System.out.print("Withdraw limit: ");
+                    double withdrawLimit = sc.nextDouble();
+
+                    Account acc = new Account(number, holder, balance, withdrawLimit);
+                    do{
+                    System.out.println();
+                    System.out.print("Enter amount for withdraw: ");
+                    double amount = sc.nextDouble();
+                        try {
+                            acc.withdraw(amount);
+                            System.out.println("New balance: " + String.format("%.2f", acc.getBalance()));
+                            validInput = true;
+                        } catch (DomainException e) {
+                            System.out.println("Withdraw error: " + e.getMessage());
+                        }
+                    }while (!validInput);
+                    break;
+
                 default:
                     System.out.println("Program exiting");
                     break;
             }
+
         } while (opt != 0);
         sc.close();
     }
