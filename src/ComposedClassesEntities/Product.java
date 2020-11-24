@@ -6,6 +6,7 @@ public class Product {
 
     private String name;
     private Double price;
+    private Integer quantity;
 
     public Product() {
     }
@@ -13,6 +14,12 @@ public class Product {
     public Product(String name, Double price) {
         this.name = name;
         this.price = price;
+    }
+
+    public Product(String name, Double price, Integer qty ) {
+        this.name = name;
+        this.price = price;
+        this.quantity=qty;
     }
 
     public String getName() {
@@ -31,6 +38,17 @@ public class Product {
         this.price = price;
     }
 
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public double totalProd() {
+        return price * quantity;
+    }
 
     @Override
     public boolean equals(Object o) {

@@ -1,4 +1,4 @@
-package Utils;
+package SortedExercises;
 
 public class CurrencyConverter {
 

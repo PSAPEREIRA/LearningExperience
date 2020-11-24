@@ -10,8 +10,10 @@ import InheritanceCastedClassesEntities.ImportedProducts;
 import InheritanceCastedClassesEntities.Products;
 import InheritanceCastedClassesEntities.UsedProducts;
 import SingleExercisesEntities.*;
-import Utils.CurrencyConverter;
+import SortedExercises.CurrencyConverter;
 
+import javax.imageio.IIOException;
+import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -19,7 +21,7 @@ import java.util.*;
 
 public class Main {
 
-    public static void main(String[] args) throws ParseException {
+    public static void main(String[] args) throws ParseException, IOException {
 
         //Local para PT
         Locale ptPortugal = new Locale("pt", "PT");
@@ -34,7 +36,7 @@ public class Main {
             System.out.println("\nPick an option:\n1-Rectangle Calculus\n2-Employee Salary\n3-Student Grades");
             System.out.println("4-Currency Converter\n5-Product\n6-BankAccount\n7-RoomRentVector\n8-ListEmployee");
             System.out.println("9-ArrayOfArray\n10-ClientOrder\n11-ProductsNew&Used\n12-TaxPayment\n13-AccountException");
-            System.out.println("0-QUIT\n");
+            System.out.println("14-Read From File\n15- Write to file\n0-QUIT\n");
             opt = sc.nextInt();
 
             switch (opt) {
@@ -50,6 +52,7 @@ public class Main {
                     System.out.printf("The area of the rectangle is: %.2f%n", rectangle.area());
                     System.out.printf("The perimeter of the rectangle is: %.2f%n", rectangle.perimeter());
                     System.out.printf("The diagonal of the rectangle is: %.2f%n", rectangle.diagonal());
+                    sc.close();
                     break;
 
                 case 2:
@@ -77,6 +80,7 @@ public class Main {
 
                     System.out.println();
                     System.out.println("Updated data: " + employee);
+                    sc.close();
                     break;
 
                 case 3:
@@ -107,7 +111,7 @@ public class Main {
                         missingPoints = student.missingPointsCalc();
                         System.out.printf("FAILED\nMISSING %.2f%n POINTS", missingPoints);
                     }
-
+                    sc.close();
                     break;
 
                 case 4:
@@ -125,7 +129,7 @@ public class Main {
                     amountConverted += amountConverted * CurrencyConverter.IOF;
 
                     System.out.printf("The amount to be paid in Euros with tax= %.2f€\n", amountConverted);
-
+                    sc.close();
                     break;
 
                 case 5:
@@ -169,6 +173,8 @@ public class Main {
                     productsSingle.setName(editName);
                     System.out.println("Product Name changed to :" + productsSingle.getName());
                     System.out.print("Product updated data: " + productsSingle);
+                    sc.close();
+                    break;
 
                 case 6:
 
@@ -213,6 +219,8 @@ public class Main {
                     account.withdraw(depositValue);
                     System.out.println("Updated account data:");
                     System.out.println(account);
+                    sc.close();
+                    break;
 
                 case 7:
 
@@ -247,6 +255,7 @@ public class Main {
                             System.out.println(roomRent);
                         }
                     }
+                    sc.close();
                     break;
 
                 case 8:
@@ -346,6 +355,7 @@ public class Main {
                             }
                         }
                     }
+                    sc.close();
                     break;
                 case 10:
                     System.out.println("Client data:");
@@ -391,7 +401,7 @@ public class Main {
 
                     System.out.println();
                     System.out.println(order);
-
+                    sc.close();
                     break;
 
                 case 11:
@@ -432,7 +442,7 @@ public class Main {
                     for (Products products : listedProducts) {
                         System.out.println(products.tag());
                     }
-
+                    sc.close();
                     break;
 
                 case 12:
@@ -479,12 +489,12 @@ public class Main {
 
                     System.out.println();
                     System.out.println("TOTAL TAXES:" + String.format("%.2f", sumOfAllTax) + "€");
-
+                    sc.close();
                     break;
 
                 case 13:
 
-                    boolean validInput=false;
+                    boolean validInput = false;
 
                     System.out.println("Enter account data");
                     System.out.print("Number: ");
@@ -498,10 +508,10 @@ public class Main {
                     double withdrawLimit = sc.nextDouble();
 
                     Account acc = new Account(number, holder, balance, withdrawLimit);
-                    do{
-                    System.out.println();
-                    System.out.print("Enter amount for withdraw: ");
-                    double amount = sc.nextDouble();
+                    do {
+                        System.out.println();
+                        System.out.print("Enter amount for withdraw: ");
+                        double amount = sc.nextDouble();
                         try {
                             acc.withdraw(amount);
                             System.out.println("New balance: " + String.format("%.2f", acc.getBalance()));
@@ -509,9 +519,58 @@ public class Main {
                         } catch (DomainException e) {
                             System.out.println("Withdraw error: " + e.getMessage());
                         }
-                    }while (!validInput);
+                    } while (!validInput);
+                    sc.close();
                     break;
 
+                case 14:
+                    List<Product> list = new ArrayList<>();
+
+                    System.out.println("Enter file path: ");
+                    String sourceFileStr = sc.nextLine();
+
+                    File sourceFile = new File(sourceFileStr);
+                    String sourceFolderStr = sourceFile.getParent();
+
+                    boolean success = new File(sourceFolderStr + "\\out").mkdir();
+
+                    String targetFileStr = sourceFolderStr + "\\out\\summary.csv";
+
+                    try (BufferedReader br = new BufferedReader(new FileReader(sourceFileStr))) {
+
+                        String itemCsv = br.readLine();
+                        while (itemCsv != null) {
+
+                            String[] fields = itemCsv.split(",");
+                            String name = fields[0];
+                            double price = Double.parseDouble(fields[1]);
+                            int quantityProd = Integer.parseInt(fields[2]);
+
+                            list.add(new Product(name, price, quantityProd));
+
+                            itemCsv = br.readLine();
+                        }
+
+                        try (BufferedWriter bw = new BufferedWriter(new FileWriter(targetFileStr))) {
+
+                            for (Product item : list) {
+                                bw.write(item.getName() + "," + String.format("%.2f", item.totalProd()));
+                                bw.newLine();
+                            }
+
+                            System.out.println(targetFileStr + " CREATED!");
+
+                        } catch (IOException e) {
+                            System.out.println("Error writing file: " + e.getMessage());
+                        }
+
+                    } catch (IOException e) {
+                        System.out.println("Error reading file: " + e.getMessage());
+                    }
+
+                    sc.close();
+
+                    break;
                 default:
                     System.out.println("Program exiting");
                     break;
@@ -522,3 +581,65 @@ public class Main {
     }
 }
 
+/*
+ System.out.println("Insert path to file");
+         String pathRead = sc.nextLine();
+
+         File pathR= new File(pathRead);
+
+         try (BufferedReader br = new BufferedReader(new FileReader(pathRead))) {
+         String line = br.readLine();
+         while (line != null) {
+         System.out.println(line);
+         line = br.readLine();
+         }
+         } catch (IIOException | FileNotFoundException e) {
+         System.out.println("Error: " + e.getMessage());
+         } catch (IOException e) {
+         e.printStackTrace();
+         }
+
+         case 15:
+         System.out.println("Do you want to create file Y/N(no if file already exists)");
+         char fileOpt=sc.next().charAt(0);
+
+         System.out.println("Insert path to file");
+         String pathWriterFile = sc.nextLine();
+         File filePathWriter= new File(pathWriterFile);
+
+
+         if (Character.toLowerCase(fileOpt) == 'y') {
+         try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePathWriter))) {
+
+         System.out.println("Insira a informação (ou insira quit para sair):\n");
+         String data;
+         do{
+         data = sc.nextLine();
+         bw.write(data);
+         bw.newLine();
+
+         }while (!data.equalsIgnoreCase("Quit"));
+         } catch (IIOException | FileNotFoundException e) {
+         System.out.println("Error: " + e.getMessage());
+         } catch (IOException e) {
+         e.printStackTrace();
+         }
+         }else{
+         try (BufferedWriter bw = new BufferedWriter(new FileWriter(pathWriterFile,true))) {
+         System.out.println("Insira a informação (ou insira quit):\n");
+         String data;
+         do{
+         data = sc.nextLine();
+         bw.write(data);
+         bw.newLine();
+
+         }while (!data.equalsIgnoreCase("Quit"));
+         } catch (IIOException | FileNotFoundException e) {
+         System.out.println("Error: " + e.getMessage());
+         } catch (IOException e) {
+         e.printStackTrace();
+         }
+
+         }
+
+ */
