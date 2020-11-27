@@ -9,10 +9,11 @@ import ExerciseAbstractEntities.TaxPayer;
 import InheritanceCastedClassesEntities.ImportedProducts;
 import InheritanceCastedClassesEntities.Products;
 import InheritanceCastedClassesEntities.UsedProducts;
+import Services.ContractService;
+import Services.PaypalService;
 import SingleExercisesEntities.*;
 import SortedExercises.CurrencyConverter;
 
-import javax.imageio.IIOException;
 import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -21,7 +22,7 @@ import java.util.*;
 
 public class Main {
 
-    public static void main(String[] args) throws ParseException, IOException {
+    public static void main(String[] args) throws ParseException {
 
         //Local para PT
         Locale ptPortugal = new Locale("pt", "PT");
@@ -36,7 +37,7 @@ public class Main {
             System.out.println("\nPick an option:\n1-Rectangle Calculus\n2-Employee Salary\n3-Student Grades");
             System.out.println("4-Currency Converter\n5-Product\n6-BankAccount\n7-RoomRentVector\n8-ListEmployee");
             System.out.println("9-ArrayOfArray\n10-ClientOrder\n11-ProductsNew&Used\n12-TaxPayment\n13-AccountException");
-            System.out.println("14-Read From File\n15- Write to file\n0-QUIT\n");
+            System.out.println("14-ReadWrite From File\n15-OnlinePaymentInterfaces\n0-QUIT\n");
             opt = sc.nextInt();
 
             switch (opt) {
@@ -570,6 +571,33 @@ public class Main {
 
                     sc.close();
 
+                    break;
+
+                case 15:
+
+                    System.out.println(("Enter contract data"));
+                    System.out.print("Contract Number: ");
+                    Integer contractNumber=sc.nextInt();
+                    System.out.print("Date (dd/MM/yyyy): ");
+                    Date date= simpleDateFormat.parse(sc.next());
+                    System.out.print("Contract value: ");
+                    Double totalValue= sc.nextDouble();
+
+                    Contract contract=new Contract(contractNumber,date,totalValue);
+
+                    System.out.print("Enter number of installments: ");
+                    int nrOfMonths=sc.nextInt();
+
+                    ContractService cs= new ContractService(new PaypalService());
+
+                    cs.processContract(contract,nrOfMonths);
+
+                    System.out.println("Installments: ");
+                    for(Installment inst: contract.getInstallments()){
+                        System.out.println(inst);
+                    }
+
+                    sc.close();
                     break;
                 default:
                     System.out.println("Program exiting");

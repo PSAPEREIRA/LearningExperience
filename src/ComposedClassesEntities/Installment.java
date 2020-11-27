@@ -1,0 +1,56 @@
+package ComposedClassesEntities;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Objects;
+
+public class Installment {
+
+    private static SimpleDateFormat sdf =new SimpleDateFormat("dd/MM/yyyy");
+
+    private Date dueDate;
+    private Double amount;
+
+    public Installment() {
+    }
+
+    public Installment(Date dueDate, Double amount) {
+        this.dueDate = dueDate;
+        this.amount = amount;
+    }
+
+    public Date getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(Date dueDate) {
+        this.dueDate = dueDate;
+    }
+
+    public Double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Double amount) {
+        this.amount = amount;
+    }
+
+    @Override
+    public String toString() {
+        return sdf.format(dueDate)+" - "+String.format("%.2f",amount);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Installment)) return false;
+        Installment that = (Installment) o;
+        return getDueDate().equals(that.getDueDate()) &&
+                getAmount().equals(that.getAmount());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getDueDate(), getAmount());
+    }
+}
